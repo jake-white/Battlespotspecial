@@ -1,10 +1,32 @@
+#header{
+    background-color: #3e8897;
+    padding: 1em;
+}
 #columns{
     height: 100%;
-    display:flex;
+    display: flex;
 }
 #left-column {
-    width: 20%; 	 
+    background: #59c3d8;
+    line-height: 200%;
 }
 #right-column {
-    width: 80%;
+    width: 100%;
+    background: #3e8897;
+}
+#statshere {
+    white-space: pre-line
+}
+
+.listing{
+    height: 100%;
+    margin: 1%;
+}
+.listing:hover{
+    background: #3e8897;
+}
+
+body { 
+    padding: 0;
+    margin: 0;
 }

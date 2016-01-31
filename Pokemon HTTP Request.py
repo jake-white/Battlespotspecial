@@ -137,7 +137,7 @@ class Pokemon:
 
     def WriteAllData(self, results):
         os.makedirs(os.path.join('.','Data',self.thisPokemonName))
-        textFile = open(os.path.join('.','Data','usage.txt'),'w')
+        textFile = open(os.path.join('.','Data',self.thisPokemonName,'usage.txt'),'w')
 
         results += (str(self.thisPokemonRanking)+'-'+str(self.thisPokemonName)+"\n")
 
