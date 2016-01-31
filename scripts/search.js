@@ -70,4 +70,5 @@ var display = function(id){
 }
 var search = function(){
 	correctFormat = searchInput.value.charAt(0).toUpperCase() + searchInput.value.slice(1).toLowerCase();
+	display(correctFormat);
 }
