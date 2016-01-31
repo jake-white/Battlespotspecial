@@ -133,9 +133,13 @@ class Pokemon:
                 if(element['ranking'] == 0):
                     if(element[name] == None):
                         element[name] = 'Other'
-    def WriteAllData(self):
-        os.makedirs(os.path.join('.','Data',str(self.thisPokemonRanking)+'-'+self.thisPokemonName))
-        textFile = open(os.path.join('.','Data',str(self.thisPokemonRanking)+'-'+self.thisPokemonName,str(self.thisPokemonRanking)+'-'+self.thisPokemonName+'.txt'),'w')
+
+
+    def WriteAllData(self, results):
+        os.makedirs(os.path.join('.','Data',self.thisPokemonName))
+        textFile = open(os.path.join('.','Data','usage.txt'),'w')
+
+        results += (str(self.thisPokemonRanking)+'-'+str(self.thisPokemonName)+"\n")
 
         textFile.write(str(self.thisPokemonRanking)+':'+ self.thisPokemonName+'|'+str(self.totalNumberOfThisPokemon))
         textFile.write("\n ---------- \n")
@@ -166,6 +170,7 @@ class Pokemon:
         textFile.write("Pokemon that KO this pokemon:\n")
         self.WriteNonNumericalData(self.pokemonThatKOThisPokemon, textFile)
         textFile.close()
+        return results
 
         
 def orderByRanking(listOfPokemon):
@@ -250,6 +255,12 @@ print orderedListByRank
 
 print "Length of ordered list: %d" % len(orderedListByRank)
 '''Writes the data to text files'''
+
+resultsString = ''
 for x in orderedListByRank:
     print x.thisPokemonRanking, x.thisPokemonName, x.totalNumberOfThisPokemon
-    x.WriteAllData()
+    resultsString = x.WriteAllData(resultsString)
+    
+resultsFile = open("Data/results.txt",'w+')
+resultsFile.write(resultsString)
+resultsFile.close()

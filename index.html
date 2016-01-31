@@ -1,0 +1,20 @@
+<!doctype HTML>
+<h2>Global Link - Battlespot Special Usage Statistics</h2>
+<p>Last updated on 1/31/2016</p>
+<p>Enter a Pokemon or browse the list below.</p>
+<input type="text" id="searchInput">
+<input type="button" value="Display Statistics" onclick="search()"><br>
+<p id="results"></p>
+<body onload = "load()">
+	<div id="columns">
+		<div id="left-column">
+			<table id="listing">
+			</table>
+		</div>
+		<div id="right-column">
+			Click on a Pokemon to get detailed usage information!
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="scripts/search.js"></script>
+<link rel="stylesheet" type="text/css" href="style.css">
