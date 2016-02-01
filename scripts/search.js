@@ -24,6 +24,9 @@ var load = function(){
 	xmlhttp.send()
 }
 
+
+var formeData = {"Kyurem-W": "-white",
+				"Kyurem-B": "-black"};
 var displayTable = function(){
 
 	var arrayOfResults = results.split("\n");
@@ -48,7 +51,7 @@ var displayTable = function(){
 			indexOfFormeDash = name.indexOf('-')
 			name = name.slice(0, indexOfFormeDash+1) + name[indexOfFormeDash+1].toUpperCase() + name.slice(indexOfFormeDash+2, name.length);
 		}
-		newRow.innerHTML = '#' + rating + " - " + name[0].toUpperCase() + name.slice(1, name.length) + "<img src='pokecons_action/"+pad(thisID, 3)+".gif'>";
+		newRow.innerHTML = '#' + rating + " - " + name[0].toUpperCase() + name.slice(1, name.length) + "<img src='gen6icons/"+thisID+".png'>";
 		table.appendChild(newRow);
 		newRow.setAttribute("onclick", "display(\"" + newRow.id + "\");")
 	}
@@ -79,7 +82,10 @@ var display = function(id){
 			var pokemonData = JSON.parse(usageData);
 
         	thisPokemonName = pokemonData['rankingPokemonInfo']['name'];
-        	thisPokemonID = pokemonData['rankingPokemonInfo']['pokemonId'].slice(0, pokemonData['rankingPokemonInfo']['pokemonId'].indexOf('-'));
+        	if(pokemonData['rankingPokemonInfo']['pokemonId'][pokemonData['rankingPokemonInfo']['pokemonId'].indexOf('-')+1] == 0)
+        		thisPokemonID = pokemonData['rankingPokemonInfo']['pokemonId'].slice(0, pokemonData['rankingPokemonInfo']['pokemonId'].indexOf('-'));
+        	else
+        		thisPokemonID = pokemonData['rankingPokemonInfo']['pokemonId'];
             thisPokemonRanking = pokemonData['rankingPokemonInfo']['ranking'];
             movesThatThisPokemonKOsWith = pokemonData['rankingPokemonSuffererWaza'];
             pokemonThatThisPokemonKOs = pokemonData['rankingPokemonSufferer'];
@@ -103,16 +109,9 @@ var displayDetail = function(id){
 	var whatToDisplay = [movesThatThisPokemonUses, itemsThatThisPokemonUses, abilitiesThatThisPokemonUses, naturesThatThisPokemonUses, 
 	pokemonOnTheSameTeamWithThisPokemon, movesThatThisPokemonKOsWith, movesThatKOThisPokemon, pokemonThatThisPokemonKOs, pokemonThatKOThisPokemon];
 	var dataType = [0,0,0,0,1,2,2,1,1];
-	var formeData = {"Kyurem-W": "-white",
-					"Kyurem-B": "-black"};
-	if(formeData[name] != null){
-		statsHere.innerHTML = 'Detailed information about '+ thisPokemonName +'\n' + 'Overall ranking = #' + thisPokemonRanking + 
-		'<img src="xy-animated/' + pad(thisPokemonID, 3) + formeData[name]+ '.gif">' + '\n';
-	}
-	else{
-		statsHere.innerHTML = 'Detailed information about ' + thisPokemonName +'\n' + 'Overall ranking = #' + thisPokemonRanking + 
-		'<img src="xy-animated/' + pad(thisPokemonID, 3) + '.gif">' + '\n';
-	}
+	statsHere.innerHTML = 'Detailed information about '+ thisPokemonName +'\n' + 'Overall ranking = #' + thisPokemonRanking + 
+		'<img src="xy-animated/' + pad(thisPokemonID, 3)+ '.gif">' + '\n';
+	console.log(pad(thisPokemonID, 3));
 	statsHere.appendChild(JSONtoHTML(whatToDisplay[id], dataType[id]));
 }
 var JSONtoHTML = function(element, dataType)

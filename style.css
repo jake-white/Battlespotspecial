@@ -7,13 +7,13 @@
     display: flex;
 }
 #left-column {
-    width: 10%;
+    width: 16%;
     background: #59c3d8;
     line-height: 200%;
 }
 #right-column {
     word-wrap: break-word;
-    width: 90%;
+    width: 84%;
     background: #3e8897;
 }
 #statshere {
