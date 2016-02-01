@@ -45,6 +45,9 @@ var displayTable = function(){
 		newRow.setAttribute("onclick", "display(\"" + name + "\");")
 	}
 }
+
+var thisPokemonName,thisPokemonRanking,movesThatThisPokemonKOsWith,pokemonThatThisPokemonKOs,pokemonOnTheSameTeamWithThisPokemon,movesThatThisPokemonUses,
+itemsThatThisPokemonUses,abilitiesThatThisPokemonUses,naturesThatThisPokemonUses,pokemonThatKOThisPokemon,movesThatKOThisPokemon;
 var display = function(id){
 	var usageData = '';
 	var element = document.getElementById(id);
@@ -60,13 +63,43 @@ var display = function(id){
 	  }
 
 	xmlhttp.onreadystatechange = function() {
-	    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {      
+	    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			usageData = xmlhttp.responseText;
-			statsHere.innerHTML = usageData;
+			var pokemonData = JSON.parse(usageData);
+
+        	thisPokemonName = pokemonData['rankingPokemonInfo']['name']
+            thisPokemonRanking = pokemonData['rankingPokemonInfo']['ranking']
+            movesThatThisPokemonKOsWith = pokemonData['rankingPokemonSuffererWaza']
+            pokemonThatThisPokemonKOs = pokemonData['rankingPokemonSufferer']
+            pokemonOnTheSameTeamWithThisPokemon = pokemonData['rankingPokemonIn']
+            movesThatThisPokemonUses = pokemonData['rankingPokemonTrend']['wazaInfo']
+            itemsThatThisPokemonUses = pokemonData['rankingPokemonTrend']['itemInfo']
+            abilitiesThatThisPokemonUses = pokemonData['rankingPokemonTrend']['tokuseiInfo']
+            naturesThatThisPokemonUses = pokemonData['rankingPokemonTrend']['seikakuInfo']
+            pokemonThatKOThisPokemon = pokemonData['rankingPokemonDown']
+            movesThatKOThisPokemon = pokemonData['rankingPokemonDownWaza']
+            totalNumberOfThisPokemon = 0;
+            listOfPercentages = []
+            listOfDenominators = []
+
+			statsHere.innerHTML = 'Detailed information about '+ thisPokemonName +'\n' + 'Overall ranking = #' + thisPokemonRanking + '\n';
+			statsHere.innerHTML += getJSONData(movesThatThisPokemonUses);
+			statsHere.innerHTML += getJSONData(pokemonOnTheSameTeamWithThisPokemon);
 	    }
 	  }
 	xmlhttp.open("GET", "Data/" + name+ "/usage.txt", true);
 	xmlhttp.send()
+}
+var getJSONData = function(element)
+{
+	stringVersion = ''
+	console.log(element.length);
+	console.log(element[0]);
+	for(var i = 0; i < element.length; ++i)
+	{
+		 stringVersion += '<td>' + '<tr>' + element[i]['ranking']+'</tr>'+ '<tr>' + element[i]['name']+'</tr>'+ '<tr>' + element[i]['usageRate']+"%"+'</tr>'+ '<tr>' + totalNumberOfThisPokemon*element[i]['usageRate']/100 + '</tr>'+'</td>';
+	}
+	return stringVersion;
 }
 var search = function(){
 	correctFormat = searchInput.value.charAt(0).toUpperCase() + searchInput.value.slice(1).toLowerCase();

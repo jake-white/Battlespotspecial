@@ -142,7 +142,7 @@ class Pokemon:
 
         results += (str(self.thisPokemonRanking)+'-'+str(self.thisPokemonName)+"\n")
 
-        textFile.write(self.ownData)
+        textFile.write(json.dumps(self.ownData))
         textFile.close()
         return results
 
