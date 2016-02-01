@@ -79,12 +79,13 @@ def GetFormeData():
         pokemonData = json.loads(requests.post(url, data=requestDataString, headers=headersDictionary).text)
         pokemonData['rankingPokemonInfo']['name'] = pokemon
         print "We obtained %s!" % (pokemon)
-        returnList.append(Pokemon(pokemonData))
+        returnList.append(Pokemon(pokemonData, pokemonWithFormes[pokemon]))
     return returnList
         
 class Pokemon:
     '''Holds all the data for a pokemon. Probably too big.'''
-    def __init__(self, pokemonData):
+    def __init__(self, pokemonData, dexNumber):
+        self.dexNumber = dexNumber;
         self.thisPokemonName = pokemonData['rankingPokemonInfo']['name']
         if(pokemonData['rankingPokemonTrend']):
             self.ownData = pokemonData
@@ -141,7 +142,7 @@ class Pokemon:
         os.makedirs(os.path.join('.','Data',self.thisPokemonName))
         textFile = open(os.path.join('.','Data',self.thisPokemonName,'usage.txt'),'w')
 
-        results += (str(self.thisPokemonRanking)+'-'+str(self.thisPokemonName)+"\n")
+        results += (str(self.dexNumber)+'.'+str(self.thisPokemonRanking)+'/'+str(self.thisPokemonName)+"\n")
 
         textFile.write(json.dumps(self.ownData))
         textFile.close()
@@ -219,7 +220,7 @@ alternateFormesList = GetFormeData()
 
 '''Populates the pokemonList with every pokemon'''
 for dexNumber in range(720):
-    pokemonList.append(Pokemon(GetData(dexNumber+1)))
+    pokemonList.append(Pokemon(GetData(dexNumber+1), dexNumber+1))
     print unicode(pokemonList[dexNumber+1])
 
 pokemonList = pokemonList + alternateFormesList

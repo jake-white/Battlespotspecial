@@ -34,15 +34,23 @@ var displayTable = function(){
 	table.cellspacing = "5";
 	for(var i = 0; i < arrayOfResults.length - 1; ++i){
 
-		indexOfDash = arrayOfResults[i].indexOf('-');
-		rating = arrayOfResults[i].slice(0, indexOfDash).trim();
-		name = arrayOfResults[i].slice(indexOfDash+1, arrayOfResults[i].length).trim();
+		var indexOfSlash = arrayOfResults[i].indexOf('/');
+		var indexOfDot = arrayOfResults[i].indexOf('.');
+		rating = arrayOfResults[i].slice(indexOfDot+1, indexOfSlash).trim();
+		name = arrayOfResults[i].slice(indexOfSlash+1, arrayOfResults[i].length).trim();
+		name = name.toLowerCase();
 		newRow = document.createElement('p');
 		newRow.id=name;
+		thisID = arrayOfResults[i].slice(0, indexOfDot);
 		newRow.className = "listing";
-		newRow.innerHTML = '#' + rating + " - " + name;
+		if(name.indexOf('-') != -1)
+		{
+			indexOfFormeDash = name.indexOf('-')
+			name = name.slice(0, indexOfFormeDash+1) + name[indexOfFormeDash+1].toUpperCase() + name.slice(indexOfFormeDash+2, name.length);
+		}
+		newRow.innerHTML = '#' + rating + " - " + name[0].toUpperCase() + name.slice(1, name.length) + "<img src='pokecons_action/"+pad(thisID, 3)+".gif'>";
 		table.appendChild(newRow);
-		newRow.setAttribute("onclick", "display(\"" + name + "\");")
+		newRow.setAttribute("onclick", "display(\"" + newRow.id + "\");")
 	}
 }
 
@@ -52,8 +60,10 @@ itemsThatThisPokemonUses,abilitiesThatThisPokemonUses,naturesThatThisPokemonUses
 var display = function(id){
 	var usageData = '';
 	var element = document.getElementById(id);
+	console.log(id);
 	var indexOfDash = element.innerHTML.indexOf('-');
-	name = element.innerHTML.slice(indexOfDash+2, element.innerHTML.length);
+	var indexOfIMG = element.innerHTML.indexOf('<');
+	name = element.innerHTML.slice(indexOfDash+2, indexOfIMG);
 
 	if (window.XMLHttpRequest) {
 	  	// code for modern browsers
@@ -68,30 +78,41 @@ var display = function(id){
 			usageData = xmlhttp.responseText;
 			var pokemonData = JSON.parse(usageData);
 
-        	thisPokemonName = pokemonData['rankingPokemonInfo']['name']
-            thisPokemonRanking = pokemonData['rankingPokemonInfo']['ranking']
-            movesThatThisPokemonKOsWith = pokemonData['rankingPokemonSuffererWaza']
-            pokemonThatThisPokemonKOs = pokemonData['rankingPokemonSufferer']
-            pokemonOnTheSameTeamWithThisPokemon = pokemonData['rankingPokemonIn']
-            movesThatThisPokemonUses = pokemonData['rankingPokemonTrend']['wazaInfo']
-            itemsThatThisPokemonUses = pokemonData['rankingPokemonTrend']['itemInfo']
-            abilitiesThatThisPokemonUses = pokemonData['rankingPokemonTrend']['tokuseiInfo']
-            naturesThatThisPokemonUses = pokemonData['rankingPokemonTrend']['seikakuInfo']
-            pokemonThatKOThisPokemon = pokemonData['rankingPokemonDown']
-            movesThatKOThisPokemon = pokemonData['rankingPokemonDownWaza']
+        	thisPokemonName = pokemonData['rankingPokemonInfo']['name'];
+        	thisPokemonID = pokemonData['rankingPokemonInfo']['pokemonId'].slice(0, pokemonData['rankingPokemonInfo']['pokemonId'].indexOf('-'));
+            thisPokemonRanking = pokemonData['rankingPokemonInfo']['ranking'];
+            movesThatThisPokemonKOsWith = pokemonData['rankingPokemonSuffererWaza'];
+            pokemonThatThisPokemonKOs = pokemonData['rankingPokemonSufferer'];
+            pokemonOnTheSameTeamWithThisPokemon = pokemonData['rankingPokemonIn'];
+            movesThatThisPokemonUses = pokemonData['rankingPokemonTrend']['wazaInfo'];
+            itemsThatThisPokemonUses = pokemonData['rankingPokemonTrend']['itemInfo'];
+            abilitiesThatThisPokemonUses = pokemonData['rankingPokemonTrend']['tokuseiInfo'];
+            naturesThatThisPokemonUses = pokemonData['rankingPokemonTrend']['seikakuInfo'];
+            pokemonThatKOThisPokemon = pokemonData['rankingPokemonDown'];
+            movesThatKOThisPokemon = pokemonData['rankingPokemonDownWaza'];
             totalNumberOfThisPokemon = pokemonData['rankingPokemonInfo']['totalNumberOfThisPokemon'];
 			displayDetail(0);
+			console.log(pokemonData);
 	    }
 	  }
-	xmlhttp.open("GET", "Data/" + name+ "/usage.txt", true);
+	xmlhttp.open("GET", "Data/" + name + "/usage.txt", true);
+	console.log(name);
 	xmlhttp.send()
 }
 var displayDetail = function(id){
 	var whatToDisplay = [movesThatThisPokemonUses, itemsThatThisPokemonUses, abilitiesThatThisPokemonUses, naturesThatThisPokemonUses, 
 	pokemonOnTheSameTeamWithThisPokemon, movesThatThisPokemonKOsWith, movesThatKOThisPokemon, pokemonThatThisPokemonKOs, pokemonThatKOThisPokemon];
 	var dataType = [0,0,0,0,1,2,2,1,1];
-	statsHere.innerHTML = 'Detailed information about '+ thisPokemonName +'\n' + 'Overall ranking = #' + thisPokemonRanking + '\n';
-
+	var formeData = {"Kyurem-W": "-white",
+					"Kyurem-B": "-black"};
+	if(formeData[name] != null){
+		statsHere.innerHTML = 'Detailed information about '+ thisPokemonName +'\n' + 'Overall ranking = #' + thisPokemonRanking + 
+		'<img src="xy-animated/' + pad(thisPokemonID, 3) + formeData[name]+ '.gif">' + '\n';
+	}
+	else{
+		statsHere.innerHTML = 'Detailed information about ' + thisPokemonName +'\n' + 'Overall ranking = #' + thisPokemonRanking + 
+		'<img src="xy-animated/' + pad(thisPokemonID, 3) + '.gif">' + '\n';
+	}
 	statsHere.appendChild(JSONtoHTML(whatToDisplay[id], dataType[id]));
 }
 var JSONtoHTML = function(element, dataType)
@@ -116,6 +137,12 @@ var JSONtoHTML = function(element, dataType)
 	return stringVersion;
 }
 var search = function(){
-	correctFormat = searchInput.value.charAt(0).toUpperCase() + searchInput.value.slice(1).toLowerCase();
+	correctFormat = searchInput.value.toLowerCase();
 	display(correctFormat);
+}
+
+var pad = function(n, width) {
+  z = '0';
+  n = n + '';
+  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
 }
