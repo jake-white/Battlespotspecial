@@ -47,7 +47,8 @@ var displayTable = function(){
 }
 
 var thisPokemonName,thisPokemonRanking,movesThatThisPokemonKOsWith,pokemonThatThisPokemonKOs,pokemonOnTheSameTeamWithThisPokemon,movesThatThisPokemonUses,
-itemsThatThisPokemonUses,abilitiesThatThisPokemonUses,naturesThatThisPokemonUses,pokemonThatKOThisPokemon,movesThatKOThisPokemon;
+itemsThatThisPokemonUses,abilitiesThatThisPokemonUses,naturesThatThisPokemonUses,pokemonThatKOThisPokemon,movesThatKOThisPokemon, totalNumberOfThisPokemon;
+
 var display = function(id){
 	var usageData = '';
 	var element = document.getElementById(id);
@@ -78,26 +79,39 @@ var display = function(id){
             naturesThatThisPokemonUses = pokemonData['rankingPokemonTrend']['seikakuInfo']
             pokemonThatKOThisPokemon = pokemonData['rankingPokemonDown']
             movesThatKOThisPokemon = pokemonData['rankingPokemonDownWaza']
-            totalNumberOfThisPokemon = 0;
-            listOfPercentages = []
-            listOfDenominators = []
-
-			statsHere.innerHTML = 'Detailed information about '+ thisPokemonName +'\n' + 'Overall ranking = #' + thisPokemonRanking + '\n';
-			statsHere.innerHTML += getJSONData(movesThatThisPokemonUses);
-			statsHere.innerHTML += getJSONData(pokemonOnTheSameTeamWithThisPokemon);
+            totalNumberOfThisPokemon = pokemonData['rankingPokemonInfo']['totalNumberOfThisPokemon'];
+			displayDetail(0);
 	    }
 	  }
 	xmlhttp.open("GET", "Data/" + name+ "/usage.txt", true);
 	xmlhttp.send()
 }
-var getJSONData = function(element)
+var displayDetail = function(id){
+	var whatToDisplay = [movesThatThisPokemonUses, itemsThatThisPokemonUses, abilitiesThatThisPokemonUses, naturesThatThisPokemonUses, 
+	pokemonOnTheSameTeamWithThisPokemon, movesThatThisPokemonKOsWith, movesThatKOThisPokemon, pokemonThatThisPokemonKOs, pokemonThatKOThisPokemon];
+	var dataType = [0,0,0,0,1,2,2,1,1];
+	statsHere.innerHTML = 'Detailed information about '+ thisPokemonName +'\n' + 'Overall ranking = #' + thisPokemonRanking + '\n';
+
+	statsHere.appendChild(JSONtoHTML(whatToDisplay[id], dataType[id]));
+}
+var JSONtoHTML = function(element, dataType)
 {
-	stringVersion = ''
-	console.log(element.length);
-	console.log(element[0]);
+	stringVersion = document.createElement('table');
+	stringVersion.className = "statsTable";
+	if(dataType==0)
+		stringVersion.innerHTML = '<tr><td>Ranking</td><td>Name</td><td>Usage Rate</td><td>Total Amount of Uses</td>'
+	else if(dataType==1)
+		stringVersion.innerHTML = '<tr><td>Ranking</td><td>Name</td>'
 	for(var i = 0; i < element.length; ++i)
 	{
-		 stringVersion += '<td>' + '<tr>' + element[i]['ranking']+'</tr>'+ '<tr>' + element[i]['name']+'</tr>'+ '<tr>' + element[i]['usageRate']+"%"+'</tr>'+ '<tr>' + totalNumberOfThisPokemon*element[i]['usageRate']/100 + '</tr>'+'</td>';
+		if(dataType==0)
+			stringVersion.innerHTML += '<tr>' + '<td>' + element[i]['ranking']+'</td>'+ '<td>' + element[i]['name']+'</td>'+ '<td>' + element[i]['usageRate']+"%"+'</td>'+ '<td>' + Math.round(totalNumberOfThisPokemon*element[i]['usageRate']/100) + '</td>'+'</tr>\n';
+		else if(dataType==1)
+			stringVersion.innerHTML += '<tr>' + '<td>' + element[i]['ranking']+'</td>'+ '<td>' + element[i]['name']+'</td></tr>\n';
+		else if(dataType==2)
+			stringVersion.innerHTML += '<tr>' + '<td>' + element[i]['ranking']+'</td>'+ '<td>' + element[i]['wazaName']+'</td>'+ '<td>' + element[i]['usageRate']+"%"+'</td>'+ '<td>' + Math.round(totalNumberOfThisPokemon*element[i]['usageRate']/100) + '</td>'+'</tr>\n';
+
+
 	}
 	return stringVersion;
 }

@@ -1,6 +1,7 @@
 <!doctype HTML>
 <div id="header">
 	<h2>Global Link - Battlespot Special Usage Statistics</h2>
+	<p>Warning: this site is under construction!</p>
 	<p>Last updated on 1/31/2016</p>
 	<p>Enter a Pokemon or browse the list below.</p>
 	<input type="text" id="searchInput">
@@ -12,6 +13,17 @@
 		<div id="left-column">
 		</div>
 		<div id="right-column">
+			<table class="selectionPane"><tr>
+				<td id="selection0" onclick = "displayDetail(0);">Moves Used</td>
+				<td id="selection1" onclick = "displayDetail(1);">Items Used</td>
+				<td id="selection2" onclick = "displayDetail(2);">Abilities Used</td>
+				<td id="selection3" onclick = "displayDetail(3);">Natures Used</td>
+				<td id="selection4" onclick = "displayDetail(4);">Top Teammates</td>
+				<td id="selection5" onclick = "displayDetail(5);">Moves Used to KO</td>
+				<td id="selection6" onclick = "displayDetail(6);">Moves that KO this Pokemon</td>
+				<td id="selection7" onclick = "displayDetail(7);">Pokemon that this Pokemon KOs</td>
+				<td id="selection8" onclick = "displayDetail(8);">Pokemon that KO this Pokemon</td>
+			</tr></table>
 			<p id="statshere">Click on a Pokemon to get detailed usage information!</p>
 		</div>
 	</div>

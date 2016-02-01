@@ -105,6 +105,7 @@ class Pokemon:
             self.PopulatePercentages(self.abilitiesThatThisPokemonUses)
             self.PopulatePercentages(self.naturesThatThisPokemonUses)
             self.totalNumberOfThisPokemon = self.CalculateTotalNumber()
+            self.ownData['rankingPokemonInfo']['totalNumberOfThisPokemon'] = self.totalNumberOfThisPokemon;
             self.CorrectBlankEntries(self.movesThatThisPokemonKOsWith, 'wazaName')
             self.CorrectBlankEntries(self.movesThatThisPokemonUses, 'name')
             self.CorrectBlankEntries(self.itemsThatThisPokemonUses, 'name')
