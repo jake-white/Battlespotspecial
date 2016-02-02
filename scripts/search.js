@@ -24,9 +24,6 @@ var load = function(){
 	xmlhttp.send()
 }
 
-
-var formeData = {"Kyurem-W": "-white",
-				"Kyurem-B": "-black"};
 var displayTable = function(){
 
 	var arrayOfResults = results.split("\n");
@@ -51,22 +48,26 @@ var displayTable = function(){
 			indexOfFormeDash = name.indexOf('-')
 			name = name.slice(0, indexOfFormeDash+1) + name[indexOfFormeDash+1].toUpperCase() + name.slice(indexOfFormeDash+2, name.length);
 		}
-		newRow.innerHTML = '#' + rating + " - " + name[0].toUpperCase() + name.slice(1, name.length) + "<img src='gen6icons/"+thisID+".png'>";
+		newRow.innerHTML = "<img src='gen6icons/"+thisID+".png'>" + '#' + rating + " - " + name[0].toUpperCase() + name.slice(1, name.length);
 		table.appendChild(newRow);
 		newRow.setAttribute("onclick", "display(\"" + newRow.id + "\");")
 	}
 }
 
 var thisPokemonName,thisPokemonRanking,movesThatThisPokemonKOsWith,pokemonThatThisPokemonKOs,pokemonOnTheSameTeamWithThisPokemon,movesThatThisPokemonUses,
-itemsThatThisPokemonUses,abilitiesThatThisPokemonUses,naturesThatThisPokemonUses,pokemonThatKOThisPokemon,movesThatKOThisPokemon, totalNumberOfThisPokemon;
+itemsThatThisPokemonUses,abilitiesThatThisPokemonUses,naturesThatThisPokemonUses,pokemonThatKOThisPokemon,movesThatKOThisPokemon, totalNumberOfThisPokemon, thisPokemonID;
 
 var display = function(id){
 	var usageData = '';
 	var element = document.getElementById(id);
 	console.log(id);
-	var indexOfDash = element.innerHTML.indexOf('-');
+	var indexOfFirstDash = element.innerHTML.indexOf('-')
+	var indexOfSecondDash = element.innerHTML.indexOf('-', indexOfFirstDash + 1);
 	var indexOfIMG = element.innerHTML.indexOf('<');
-	name = element.innerHTML.slice(indexOfDash+2, indexOfIMG);
+	if(indexOfSecondDash != -1)
+		name = element.innerHTML.slice(indexOfSecondDash+2, element.innerHTML.length);
+	else		
+		name = element.innerHTML.slice(indexOfFirstDash+2, element.innerHTML.length);
 
 	if (window.XMLHttpRequest) {
 	  	// code for modern browsers
@@ -109,8 +110,8 @@ var displayDetail = function(id){
 	var whatToDisplay = [movesThatThisPokemonUses, itemsThatThisPokemonUses, abilitiesThatThisPokemonUses, naturesThatThisPokemonUses, 
 	pokemonOnTheSameTeamWithThisPokemon, movesThatThisPokemonKOsWith, movesThatKOThisPokemon, pokemonThatThisPokemonKOs, pokemonThatKOThisPokemon];
 	var dataType = [0,0,0,0,1,2,2,1,1];
-	statsHere.innerHTML = 'Detailed information about '+ thisPokemonName +'\n' + 'Overall ranking = #' + thisPokemonRanking + 
-		'<img src="xy-animated/' + pad(thisPokemonID, 3)+ '.gif">' + '\n';
+	statsHere.innerHTML = 'Detailed information about '+ thisPokemonName +'\n' + '<img src="xy-animated/' + pad(thisPokemonID, 3)+ '.gif">' + '\n' + 'Overall ranking = #' + thisPokemonRanking
+		 + '\n';
 	console.log(pad(thisPokemonID, 3));
 	statsHere.appendChild(JSONtoHTML(whatToDisplay[id], dataType[id]));
 }
