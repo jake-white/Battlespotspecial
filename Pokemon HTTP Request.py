@@ -245,7 +245,7 @@ alternateFormesList = GetFormeData()
 '''Populates the pokemonList with every pokemon'''
 for dexNumber in range(720):
     pokemonList.append(Pokemon(GetData(dexNumber+1)))
-    print unicode(pokemonList[dexNumber+1])
+    print "'" + unicode(pokemonList[dexNumber+1]) + "':", dexNumber+1,","
 
 pokemonList = pokemonList + alternateFormesList
 
