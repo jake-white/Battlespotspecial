@@ -50,7 +50,7 @@ var displayTable = function(){
 		}
 		newRow.innerHTML = "<img src='gen6icons/"+thisID+".png'>" + '#' + rating + " - " + name[0].toUpperCase() + name.slice(1, name.length);
 		table.appendChild(newRow);
-		newRow.setAttribute("onclick", "display(\"" + newRow.id + "\");")
+		newRow.setAttribute("onclick", "display(\"" + newRow.id + "\");");
 	}
 }
 
@@ -61,11 +61,20 @@ var display = function(id){
 	var usageData = '';
 	var element = document.getElementById(id);
 	console.log(id);
-	var indexOfFirstDash = element.innerHTML.indexOf('-')
+	//this code is so goddamn awful I wish I could rewrite this entire thing
+	//please don't judge me I sucked at javascript and didn't even know jquery
+	var indexOfFirstDash = element.innerHTML.indexOf('-');
 	var indexOfSecondDash = element.innerHTML.indexOf('-', indexOfFirstDash + 1);
-	var indexOfIMG = element.innerHTML.indexOf('<');
 	if(indexOfSecondDash != -1)
+		var indexOfThirdDash = element.innerHTML.indexOf('-', indexOfSecondDash + 1);
+	else
+		var indexOfThirdDash = -1;
+	var indexOfIMG = element.innerHTML.indexOf('<');
+	console.log(indexOfFirstDash + " " + indexOfSecondDash + " " + indexOfThirdDash);
+	if(indexOfThirdDash != -1)
 		name = element.innerHTML.slice(indexOfSecondDash+2, element.innerHTML.length);
+	else if(indexOfSecondDash != -1)		
+		name = element.innerHTML.slice(indexOfFirstDash+2, element.innerHTML.length);
 	else		
 		name = element.innerHTML.slice(indexOfFirstDash+2, element.innerHTML.length);
 
