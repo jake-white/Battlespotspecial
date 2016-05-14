@@ -18,9 +18,9 @@ def GetData(pokemonID):
     '''Pulls the json data from PGL and converts it to a usable dictionary'''
     requestDataList = [
         'languageId=2',
-        'seasonId=114',
+        'seasonId=115',
         'battleType=5',
-        'timezone=EST',
+        'timezone=EDT',
         'pokemonId=%d-0' % (pokemonID),
         'displayNumberWaza=20',
         'displayNumberTokusei=3',
@@ -30,7 +30,7 @@ def GetData(pokemonID):
         'displayNumberPokemonIn=20',
         'displayNumberPokemonDown=20',
         'displayNumberPokemonDownWaza=20',
-        'timeStamp=1453422223192'
+        'timeStamp=1460576717081'
         ]
     requestDataString = "&".join(requestDataList)
     pokemonData = json.loads(requests.post(url, data=requestDataString, headers=headersDictionary).text)
@@ -60,9 +60,9 @@ def GetFormeData():
     for pokemon in pokemonWithFormes:
         requestDataList = [
         'languageId=2',
-        'seasonId=114',
+        'seasonId=115',
         'battleType=5',
-        'timezone=EST',
+        'timezone=EDT',
         'pokemonId=%s' % (pokemonWithFormes[pokemon]),
         'displayNumberWaza=20',
         'displayNumberTokusei=3',
@@ -72,7 +72,7 @@ def GetFormeData():
         'displayNumberPokemonIn=20',
         'displayNumberPokemonDown=20',
         'displayNumberPokemonDownWaza=20',
-        'timeStamp=1453422223192'
+        'timeStamp=1460576717081'
         ]
         requestDataString = "&".join(requestDataList)
         print "Now obtaining %s!" % (pokemon)
@@ -85,7 +85,8 @@ def GetFormeData():
 class Pokemon:
     '''Holds all the data for a pokemon. Probably too big.'''
     def __init__(self, pokemonData):
-        self.thisPokemonName = pokemonData['rankingPokemonInfo']['name']
+        self.thisPokemonData = pokemonData
+        self.thisPokemonName = pokemonData['rankingPokemonInfo']['name'].encode('utf8')
         if(pokemonData['rankingPokemonTrend']):
             self.thisPokemonRanking = pokemonData['rankingPokemonInfo']['ranking']
             self.movesThatThisPokemonKOsWith = pokemonData['rankingPokemonSuffererWaza']
@@ -133,13 +134,9 @@ class Pokemon:
                 if(element['ranking'] == 0):
                     if(element[name] == None):
                         element[name] = 'Other'
-
-
-    def WriteAllData(self, results):
-        os.makedirs(os.path.join('.','Data',self.thisPokemonName))
-        textFile = open(os.path.join('.','Data',self.thisPokemonName,'usage.txt'),'w')
-
-        results += (str(self.thisPokemonRanking)+'-'+str(self.thisPokemonName)+"\n")
+    def WriteAllData(self):
+        os.makedirs(os.path.join('.','Data',str(self.thisPokemonRanking)+'-'+self.thisPokemonName.decode('utf8')))
+        textFile = open(os.path.join('.','Data',str(self.thisPokemonRanking)+'-'+self.thisPokemonName.decode('utf8'),str(self.thisPokemonRanking)+'-'+self.thisPokemonName.decode('utf8')+'.txt'),'w')
 
         textFile.write(str(self.thisPokemonRanking)+':'+ self.thisPokemonName+'|'+str(self.totalNumberOfThisPokemon))
         textFile.write("\n ---------- \n")
@@ -170,7 +167,6 @@ class Pokemon:
         textFile.write("Pokemon that KO this pokemon:\n")
         self.WriteNonNumericalData(self.pokemonThatKOThisPokemon, textFile)
         textFile.close()
-        return results
 
         
 def orderByRanking(listOfPokemon):
@@ -229,14 +225,14 @@ headersDictionary = {
 	'Connection' : 'keep-alive',
 	'Content-Length' : '288',
 	'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8',
-		'Cookie' : '__ulfpc=201507141648558514; __utma=234147713.44858212.1436906933.1450754425.1450754425.1; __utmz=234147713.1450754425.1.1.utmcsr=pokemon-gl.com|utmccn=(referral)|utmcmd=referral|utmcct=/; region=1; language_id=2; site=2; JSESSIONID=DD14469E9FCCB8E77EC19C37921BE293; AWSELB=99C3FF770EA3504C46F25D799674203D12E259AC7AF523A441BC83B81A7A34CC74546EE73334E1A5AE0296D9AE6D620857C9DF385445A267DB7E496BEA70327F1D05B86B1023FF697977A00E295CBB8437E703A8CE; _ga=GA1.2.44858212.1436906933; _gat=1; NO_MEMBER_DATA=%7B%22language_id%22%3A2%2C%22site%22%3A2%2C%22region%22%3A1%7D',
-		'Host' : '3ds.pokemon-gl.com',
+	'Cookie' : '__ulfpc=201601211137474391; __utma=234147713.361904851.1453394265.1458005816.1458005816.1; __utmz=234147713.1458005816.1.1.utmcsr=pokemon-gl.com|utmccn=(referral)|utmcmd=referral|utmcct=/; region=1; language_id=2; site=2; _ga=GA1.2.361904851.1453394265; NO_MEMBER_DATA=%7B%22language_id%22%3A2%2C%22site%22%3A2%2C%22region%22%3A1%7D; JSESSIONID=7EF2250378221ABEE5A25264E4028FAD; AWSELB=99C3FF770EA3504C46F25D799674203D12E259AC7A4F0A5E1E369671A8F7594F0BEAC14B139D4F6D01FB26DFB85A3B6351067549EB45A267DB7E496BEA70327F1D05B86B10902FD1F8AC29087BDAD59C796899B4B7',
+	'Host' : '3ds.pokemon-gl.com',
 	'Origin' : 'http://3ds.pokemon-gl.com',
 	'Referer' : 'http://3ds.pokemon-gl.com/battle/oras/',
-	'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36'
-	}
+	'User-Agent' : '/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36'
+        }
 
-url = "http://3ds.pokemon-gl.com/frontendApi/gbu/getSeasonPokemonDetail"
+url = "https://3ds.pokemon-gl.com/frontendApi/gbu/getSeasonPokemonDetail"
 
 
 pokemonList = [0]
@@ -245,7 +241,7 @@ alternateFormesList = GetFormeData()
 '''Populates the pokemonList with every pokemon'''
 for dexNumber in range(720):
     pokemonList.append(Pokemon(GetData(dexNumber+1)))
-    print "'" + unicode(pokemonList[dexNumber+1]) + "':", dexNumber+1,","
+    print pokemonList[dexNumber+1].thisPokemonName.decode('utf8')
 
 pokemonList = pokemonList + alternateFormesList
 
@@ -255,12 +251,17 @@ print orderedListByRank
 
 print "Length of ordered list: %d" % len(orderedListByRank)
 '''Writes the data to text files'''
-
-resultsString = ''
 for x in orderedListByRank:
-    print x.thisPokemonRanking, x.thisPokemonName, x.totalNumberOfThisPokemon
-    resultsString = x.WriteAllData(resultsString)
-    
-resultsFile = open("Data/results.txt",'w+')
-resultsFile.write(resultsString)
-resultsFile.close()
+    print x.thisPokemonRanking, x.thisPokemonName.decode('utf8'), x.totalNumberOfThisPokemon
+
+for pokemon in orderedListByRank:
+    pokemon.WriteAllData()
+
+movesFile = open(os.path.join('.','Data','MovesData.txt'),'w')
+for pokemon in orderedListByRank:
+    movesFile.write(str(pokemon.thisPokemonRanking)+'.'+ pokemon.thisPokemonName+'|'+str(pokemon.totalNumberOfThisPokemon)+'\n')
+    movesFile.write('---\n')
+    pokemon.WriteNumericalData(pokemon.movesThatThisPokemonUses, 'name', movesFile)
+    movesFile.write("\n ---------- \n")
+
+movesFile.close()
