@@ -18,7 +18,7 @@ def GetData(pokemonID):
     '''Pulls the json data from PGL and converts it to a usable dictionary'''
     requestDataList = [
         'languageId=2',
-        'seasonId=115',
+        'seasonId=116',
         'battleType=5',
         'timezone=EDT',
         'pokemonId=%d-0' % (pokemonID),
@@ -60,7 +60,7 @@ def GetFormeData():
     for pokemon in pokemonWithFormes:
         requestDataList = [
         'languageId=2',
-        'seasonId=115',
+        'seasonId=116',
         'battleType=5',
         'timezone=EDT',
         'pokemonId=%s' % (pokemonWithFormes[pokemon]),
