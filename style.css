@@ -2,6 +2,29 @@
     background-color: #3e8897;
     padding: 1em;
 }
+
+.header{
+    margin:0 0 20px 0;
+    color: #ffffff;
+    background:#000000;
+    border-bottom:1px solid #333333;
+    box-shadow:inset 1px 1px 0 rgba(255,255,255,.6),0px 2px 2px rgba(0,0,0,.15);
+    min-height:50px;
+}
+
+.header a {
+    color: #D8A10A;
+    text-decoration: none;
+}
+
+.nav{
+    display:block;
+    list-style:none;
+    margin:0;
+    padding:0;
+    float:left;
+    padding:15px 6px 15px 6px;
+}
 #columns{
     height: 100%;
     display: flex;
@@ -43,8 +66,10 @@ table.selectionPane td:hover{
     border: 1px solid #000;
     border-spacing: 10%;
 }
-
-body { 
-    padding: 0;
-    margin: 0;
+body, html {
+    margin:0;
+    padding:0;
+    background: #3e8897;
+    color: #262626;
+    font-family: Open Sans;
 }
