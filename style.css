@@ -21,7 +21,6 @@
 }
 
 .listing{
-    height: 100%;
     margin: 1%;
 }
 .listing:hover{
@@ -30,7 +29,6 @@
 
 table.selectionPane{
     border: 1px solid #000;
-    height: 100%;
     background: #59c3d8;
 }
 table.selectionPane td{
